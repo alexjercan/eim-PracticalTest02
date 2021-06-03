@@ -7,16 +7,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 
-import cz.msebera.android.httpclient.client.ClientProtocolException;
 import ro.pub.cs.systems.eim.practicaltest02.general.Constants;
-import ro.pub.cs.systems.eim.practicaltest02.model.PokemonInformation;
 
 public class ServerThread extends Thread {
 
     private int port = 0;
     private ServerSocket serverSocket = null;
 
-    private HashMap<String, PokemonInformation> data = null;
+    private HashMap<String, String> data = null;
 
     public ServerThread(int port) {
         this.port = port;
@@ -47,11 +45,11 @@ public class ServerThread extends Thread {
         return serverSocket;
     }
 
-    public synchronized void setData(String name, PokemonInformation information) {
+    public synchronized void setData(String name, String information) {
         this.data.put(name, information);
     }
 
-    public synchronized HashMap<String, PokemonInformation> getData() {
+    public synchronized HashMap<String, String> getData() {
         return data;
     }
 
@@ -65,15 +63,10 @@ public class ServerThread extends Thread {
                 CommunicationThread communicationThread = new CommunicationThread(this, socket);
                 communicationThread.start();
             }
-        } catch (ClientProtocolException clientProtocolException) {
+        } catch (IOException clientProtocolException) {
             Log.e(Constants.TAG, "[SERVER THREAD] An exception has occurred: " + clientProtocolException.getMessage());
             if (Constants.DEBUG) {
                 clientProtocolException.printStackTrace();
-            }
-        } catch (IOException ioException) {
-            Log.e(Constants.TAG, "[SERVER THREAD] An exception has occurred: " + ioException.getMessage());
-            if (Constants.DEBUG) {
-                ioException.printStackTrace();
             }
         }
     }

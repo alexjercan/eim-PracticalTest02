@@ -13,6 +13,9 @@ import android.widget.Toast;
 
 import ro.pub.cs.systems.eim.practicaltest02.general.Constants;
 import ro.pub.cs.systems.eim.practicaltest02.network.ClientThread;
+import ro.pub.cs.systems.eim.practicaltest02.network.DataParser;
+import ro.pub.cs.systems.eim.practicaltest02.network.PokemonListParser;
+import ro.pub.cs.systems.eim.practicaltest02.network.PokemonParser;
 import ro.pub.cs.systems.eim.practicaltest02.network.ServerThread;
 
 public class PracticalTest02MainActivity extends AppCompatActivity {
@@ -21,6 +24,7 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
     private TextView pokemonInformationTextView = null;
     private ImageView pokemonProfileImageView = null;
     private Button sendRequestButton = null;
+    private Button secondRequestButton = null;
 
     private ServerThread serverThread = null;
     private ClientThread clientThread = null;
@@ -40,7 +44,29 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
 
             pokemonInformationTextView.setText(Constants.EMPTY_STRING);
 
-            clientThread = new ClientThread("localhost", Integer.parseInt(Constants.PORT), pokemonName, pokemonInformationTextView, pokemonProfileImageView);
+            DataParser parser = new PokemonParser(Constants.WEB_SERVICE_ADDRESS + pokemonName, pokemonInformationTextView, pokemonProfileImageView);
+            clientThread = new ClientThread("localhost", Integer.parseInt(Constants.PORT), parser);
+            clientThread.start();
+        }
+    }
+
+    private SecondButtonClickListener secondButtonClickListener = new SecondButtonClickListener();
+    private class SecondButtonClickListener implements Button.OnClickListener {
+        public void onClick(View view) {
+            String pokemonName = pokemonNameEditText.getText().toString();
+            if (pokemonName == null || pokemonName.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Client connection parameters should be filled!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (serverThread == null || !serverThread.isAlive()) {
+                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] There is no server to connect to!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            pokemonInformationTextView.setText(Constants.EMPTY_STRING);
+
+            DataParser parser = new PokemonListParser(Constants.WEB_SERVICE_ADDRESS, pokemonInformationTextView);
+            clientThread = new ClientThread("localhost", Integer.parseInt(Constants.PORT), parser);
             clientThread.start();
         }
     }
@@ -53,6 +79,8 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
 
         sendRequestButton = (Button)findViewById(R.id.sendRequest);
         sendRequestButton.setOnClickListener(connectButtonClickListener);
+        secondRequestButton = (Button) findViewById(R.id.secondRequest);
+        secondRequestButton.setOnClickListener(secondButtonClickListener);
 
         pokemonProfileImageView = (ImageView) findViewById(R.id.imageView);
 
