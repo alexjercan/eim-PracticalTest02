@@ -115,6 +115,8 @@ public class CommunicationThread extends Thread {
                 result = pokemonInformation.toString();
                 printWriter.println(result);
                 printWriter.flush();
+                printWriter.println(pokemonInformation.getImageURI());
+                printWriter.flush();
             }
             if (pokemonInformation == null) {
                 Log.e(Constants.TAG, "[COMMUNICATION THREAD] Pokemon is null!");

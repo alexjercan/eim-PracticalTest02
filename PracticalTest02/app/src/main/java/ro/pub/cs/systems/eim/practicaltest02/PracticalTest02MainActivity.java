@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
 
     private EditText pokemonNameEditText = null;
     private TextView pokemonInformationTextView = null;
+    private ImageView pokemonProfileImageView = null;
     private Button sendRequestButton = null;
 
     private ServerThread serverThread = null;
@@ -45,7 +47,7 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
 
             pokemonInformationTextView.setText(Constants.EMPTY_STRING);
 
-            clientThread = new ClientThread("localhost", Integer.parseInt(Constants.PORT), pokemonName, pokemonInformationTextView);
+            clientThread = new ClientThread("localhost", Integer.parseInt(Constants.PORT), pokemonName, pokemonInformationTextView, pokemonProfileImageView);
             clientThread.start();
         }
     }
@@ -58,6 +60,8 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
 
         sendRequestButton = (Button)findViewById(R.id.sendRequest);
         sendRequestButton.setOnClickListener(connectButtonClickListener);
+
+        pokemonProfileImageView = (ImageView) findViewById(R.id.imageView);
 
         pokemonNameEditText = (EditText)findViewById(R.id.pokemonNameText);
         pokemonInformationTextView = (TextView)findViewById(R.id.informationTextView);
