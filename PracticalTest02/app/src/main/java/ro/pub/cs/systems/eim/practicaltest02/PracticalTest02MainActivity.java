@@ -28,13 +28,6 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
     private SendButtonClickListener connectButtonClickListener = new SendButtonClickListener();
     private class SendButtonClickListener implements Button.OnClickListener {
         public void onClick(View view) {
-            serverThread = new ServerThread(Integer.parseInt(Constants.PORT));
-            if (serverThread.getServerSocket() == null) {
-                Log.e(Constants.TAG, "[MAIN ACTIVITY] Could not create server thread!");
-                return;
-            }
-            serverThread.start();
-
             String pokemonName = pokemonNameEditText.getText().toString();
             if (pokemonName == null || pokemonName.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Client connection parameters should be filled!", Toast.LENGTH_SHORT).show();
@@ -65,6 +58,13 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
 
         pokemonNameEditText = (EditText)findViewById(R.id.pokemonNameText);
         pokemonInformationTextView = (TextView)findViewById(R.id.informationTextView);
+
+        serverThread = new ServerThread(Integer.parseInt(Constants.PORT));
+        if (serverThread.getServerSocket() == null) {
+            Log.e(Constants.TAG, "[MAIN ACTIVITY] Could not create server thread!");
+            return;
+        }
+        serverThread.start();
     }
 
     @Override
